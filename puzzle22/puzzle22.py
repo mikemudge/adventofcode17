@@ -40,7 +40,7 @@ def main():
         lines = f.readlines()
 
         size = 500
-        grid = [[None for x in range(size)] for y in range(size)]
+        grid = [['.' for x in range(size)] for y in range(size)]
         count = 0
         print len(lines)
 
@@ -67,21 +67,38 @@ def main():
         y = (len(grid) - 1) / 2
         d = NORTH
         # Iterate x, y turning as virus is created or destroyed?
-        for i in range(10000):
+        for i in range(10000000):
+            # Part 1
             # Turn left if clean
-            print x, y
-            if grid[y][x] != '#':
-                d = Direction.left(d)
+            # if grid[y][x] != '#':
+            #     d = Direction.left(d)
+            #     count += 1
+            #     grid[y][x] = '#'
+            # else:
+            #     d = Direction.right(d)
+            #     grid[y][x] = '.'
+
+            # Part 2
+            if grid[y][x] == '.':
+                d = d.left()
+                grid[y][x] = 'W'
+            elif grid[y][x] == 'W':
                 count += 1
+                # No change to direction
                 grid[y][x] = '#'
-            else:
-                d = Direction.right(d)
+            elif grid[y][x] == '#':
+                d = d.right()
+                grid[y][x] = 'F'
+            else:  # Flagged to be cleaned, F
+                # Reverse direction
+                d = d.right().right()
                 grid[y][x] = '.'
+
             x += d.dx
             y += d.dy
 
-            if i in [0, 1, 69]:
-                print 'Iteration', i
+            if i in [0, 1, 4, 5, 6, 99]:
+                print 'Iteration', i, count
                 print '\n'.join([''.join([v if v else '.' for v in row[size / 2 - 20:size / 2 + 20]]) for row in grid[size / 2 - 20:size / 2 + 20]])
 
         print 'Part 1:', count
